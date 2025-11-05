@@ -12,6 +12,14 @@ module GodSystem
       system: /^system\s+(.+)$/i,
       search: /^search\s+(.+?)\s+in\s+(.+)$/i,
       create_dir: /^create\s+directory\s+(.+)$/i,
+      # Subscription commands
+      subscription_tiers: /^subscription\s+tiers$/i,
+      subscription_subscribe: /^subscription\s+subscribe\s+(\S+)\s+(\S+)\s+(\S+)$/i,
+      subscription_status: /^subscription\s+status\s+(\S+)$/i,
+      subscription_cancel: /^subscription\s+cancel\s+(\S+)(?:\s+(immediate))?$/i,
+      subscription_reactivate: /^subscription\s+reactivate\s+(\S+)$/i,
+      subscription_validate: /^subscription\s+validate\s+(\S+)$/i,
+      subscription_stats: /^subscription\s+stats$/i,
       help: /^help$/i,
       status: /^status$/i
     }.freeze
@@ -48,6 +56,20 @@ module GodSystem
         { type: :search, pattern: match[1], path: match[2] }
       when :create_dir
         { type: :create_dir, path: match[1] }
+      when :subscription_tiers
+        { type: :subscription, action: 'list_tiers' }
+      when :subscription_subscribe
+        { type: :subscription, action: 'subscribe', user_id: match[1], email: match[2], tier_id: match[3] }
+      when :subscription_status
+        { type: :subscription, action: 'status', user_id: match[1] }
+      when :subscription_cancel
+        { type: :subscription, action: 'cancel', user_id: match[1], immediate: match[2] == 'immediate' }
+      when :subscription_reactivate
+        { type: :subscription, action: 'reactivate', user_id: match[1] }
+      when :subscription_validate
+        { type: :subscription, action: 'validate', user_id: match[1] }
+      when :subscription_stats
+        { type: :subscription, action: 'stats' }
       when :help
         { type: :help }
       when :status

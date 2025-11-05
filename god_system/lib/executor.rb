@@ -2,13 +2,21 @@
 
 require 'fileutils'
 require 'open3'
+require_relative 'modules/subscription_module'
 
 module GodSystem
   class Executor
-    attr_reader :logger
+    attr_reader :logger, :subscription_module
 
     def initialize(logger)
       @logger = logger
+      
+      begin
+        @subscription_module = Modules::SubscriptionModule.new
+      rescue => e
+        @subscription_module = nil
+        puts "Warning: Subscription module not available: #{e.message}"
+      end
     end
 
     def execute(parsed_command)
@@ -29,6 +37,8 @@ module GodSystem
         search_files(parsed_command[:pattern], parsed_command[:path])
       when :create_dir
         create_directory(parsed_command[:path])
+      when :subscription
+        execute_subscription_command(parsed_command)
       when :help
         show_help
       when :status
@@ -106,6 +116,16 @@ module GodSystem
       { success: false, error: e.message }
     end
 
+    def execute_subscription_command(command)
+      unless @subscription_module
+        return { success: false, error: 'Subscription module not available' }
+      end
+
+      @subscription_module.execute(command)
+    rescue => e
+      { success: false, error: "Subscription error: #{e.message}" }
+    end
+
     def show_help
       help_text = <<~HELP
         GOD SYSTEM - Personal Command Center
@@ -122,6 +142,15 @@ module GodSystem
         - create directory <path>        : Create a directory
         - help                           : Show this help
         - status                         : Show system status
+        
+        Subscription Commands:
+        - subscription tiers                           : List available subscription tiers
+        - subscription subscribe <user_id> <email> <tier_id> : Create a subscription
+        - subscription status <user_id>                : Show subscription status
+        - subscription cancel <user_id> [immediate]    : Cancel subscription
+        - subscription reactivate <user_id>            : Reactivate subscription
+        - subscription validate <user_id>              : Validate subscription
+        - subscription stats                           : Show subscription statistics
         
         You can also type raw commands and the system will attempt to execute them.
       HELP

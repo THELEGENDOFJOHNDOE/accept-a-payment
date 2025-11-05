@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'blackbox_pro/cli'
+
+cli = BlackboxPro::CLI.new
+cli.run(ARGV)

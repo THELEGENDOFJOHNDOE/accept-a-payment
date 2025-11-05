@@ -1,0 +1,82 @@
+# BLACKBOX PRO Subscription Tiers Configuration
+# frozen_string_literal: true
+
+tiers:
+  free:
+    name: "BLACKBOX FREE"
+    price: 0
+    currency: "usd"
+    interval: null
+    stripe_price_id: null
+    features:
+      - "Basic code assistance"
+      - "Limited API calls (100/day)"
+      - "Community support"
+      - "Standard response time"
+    limits:
+      api_calls_per_day: 100
+      max_file_size_mb: 10
+      concurrent_sessions: 1
+      priority_support: false
+      advanced_features: false
+
+  pro_monthly:
+    name: "BLACKBOX PRO Monthly"
+    price: 20.00
+    currency: "usd"
+    interval: "month"
+    stripe_price_id: "price_pro_monthly"  # Replace with actual Stripe Price ID
+    stripe_product_id: "prod_blackbox_pro"  # Replace with actual Stripe Product ID
+    features:
+      - "Advanced code assistance"
+      - "Unlimited API calls"
+      - "Priority support"
+      - "Fast response time"
+      - "Advanced debugging tools"
+      - "Code optimization suggestions"
+      - "Multi-language support"
+      - "Custom integrations"
+    limits:
+      api_calls_per_day: -1  # unlimited
+      max_file_size_mb: 100
+      concurrent_sessions: 5
+      priority_support: true
+      advanced_features: true
+
+  pro_yearly:
+    name: "BLACKBOX PRO Yearly"
+    price: 200.00
+    currency: "usd"
+    interval: "year"
+    stripe_price_id: "price_pro_yearly"  # Replace with actual Stripe Price ID
+    stripe_product_id: "prod_blackbox_pro"  # Replace with actual Stripe Product ID
+    features:
+      - "Advanced code assistance"
+      - "Unlimited API calls"
+      - "Priority support"
+      - "Fast response time"
+      - "Advanced debugging tools"
+      - "Code optimization suggestions"
+      - "Multi-language support"
+      - "Custom integrations"
+      - "2 months free (compared to monthly)"
+    limits:
+      api_calls_per_day: -1  # unlimited
+      max_file_size_mb: 100
+      concurrent_sessions: 10
+      priority_support: true
+      advanced_features: true
+    discount_percentage: 16.67  # 2 months free
+
+# Trial configuration
+trial:
+  enabled: true
+  duration_days: 14
+  tier: "pro_monthly"
+
+# Feature flags
+features:
+  webhooks_enabled: true
+  auto_renewal: true
+  proration: true
+  grace_period_days: 3
